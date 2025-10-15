@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament Randomizer Pro</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #1a1a2e; --primary-color: #16213e; --secondary-color: #0f3460;
+            --accent-color: #e94560; --font-color: #ffffff; --card-bg: rgba(255, 255, 255, 0.08);
+        }
+        body {
+            font-family: 'Poppins', sans-serif; background: linear-gradient(45deg, #1a1a2e, #16213e, #0f3460);
+            color: var(--font-color); display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box;
+        }
+        h1, h2 { text-align: center; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        h1 { font-size: 2.5rem; color: var(--font-color); margin-bottom: 10px; }
+        h2 { font-size: 1.5rem; color: #bdc3c7; border-bottom: 2px solid var(--accent-color); padding-bottom: 10px; margin-top: 0; }
+        .container { display: flex; flex-direction: column; gap: 30px; width: 100%; max-width: 1400px; align-items: center; }
+        .panel {
+            width: 100%; background: var(--card-bg); padding: 25px; border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.18); box-sizing: border-box;
+        }
+        #team-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .team {
+            border: none; border-radius: 10px; padding: 15px; background: rgba(0,0,0,0.2);
+            transition: transform 0.3s ease; display: flex; flex-direction: column;
+        }
+        .team:hover { transform: translateY(-5px); }
+        .team h3 { margin-top: 0; color: var(--font-color); text-align: center; font-size: 1.2rem; }
+        .team ul { list-style: none; padding: 0; min-height: 120px; flex-grow: 1; }
+        .team li {
+            padding: 10px; margin-top: 8px; border-radius: 8px; text-align: center;
+            font-weight: 600; opacity: 0; transform: scale(0.8);
+            animation: popInPlayer 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+        .pot1 { background: linear-gradient(45deg, #e94560, #ff7675); }
+        .pot2 { background: linear-gradient(45deg, #0984e3, #74b9ff); }
+        .pot3 { background: linear-gradient(45deg, #6c5ce7, #a29bfe); }
+        @keyframes popInPlayer { to { opacity: 1; transform: scale(1); } }
+        .controls { margin: 25px 0; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+        button {
+            padding: 12px 30px; font-size: 16px; font-family: 'Poppins', sans-serif; font-weight: 600;
+            cursor: pointer; border: none; border-radius: 50px; color: white;
+            transition: all 0.2s ease; display: flex; align-items: center; gap: 10px;
+        }
+        button:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+        button:active:not(:disabled) { transform: translateY(-1px) scale(0.98); box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        #lock-pots-btn { background-color: #27ae60; }
+        #generate-teams-btn { background-color: #5d52d5; }
+        #generate-matches-btn { background-color: #03a9f4; }
+        #reset-btn { background-color: #c0392b; }
+        #copy-results-btn { background-color: #f39c12; }
+        #matches-section { max-width: 700px; }
+        #matches-container div {
+            padding: 15px; background: linear-gradient(45deg, #5d52d5, #03a9f4);
+            border-radius: 10px; margin-top: 15px; font-size: 1.3rem; font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); opacity: 0; transform: scale(0.95);
+            animation: popIn 0.4s ease forwards;
+        }
+        #matches-container span { color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+        @keyframes popIn { to { opacity: 1; transform: scale(1); } }
+        .input-pots-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .input-pots-grid label { font-weight: 600; font-size: 1.1rem; color: var(--accent-color); margin-bottom: 10px; display: block; }
+        .input-pots-grid textarea {
+            width: 100%; height: 180px; background-color: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px; color: var(--font-color); font-family: 'Poppins', sans-serif;
+            padding: 10px; font-size: 1rem; resize: vertical; box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+    <h1><i class="fas fa-star"></i> Tournament Randomizer Pro</h1>
+
+    <div id="setup-panel" class="panel">
+        <h2><i class="fas fa-edit"></i> 1. Isi Daftar Pemain Harian</h2>
+        <div class="input-pots-grid">
+            <div>
+                <label for="pot1-input">Pot 1 (Rank 1-6)</label>
+                <textarea id="pot1-input" placeholder="Masukkan 6 nama, pisahkan dengan koma atau baris baru"></textarea>
+            </div>
+            <div>
+                <label for="pot2-input">Pot 2 (Rank 7-12)</label>
+                <textarea id="pot2-input" placeholder="Masukkan 6 nama, pisahkan dengan koma atau baris baru"></textarea>
+            </div>
+            <div>
+                <label for="pot3-input">Pot 3 (Rank 13-18)</label>
+                <textarea id="pot3-input" placeholder="Masukkan 6 nama, pisahkan dengan koma atau baris baru"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="lock-pots-btn"><i class="fas fa-lock"></i> Kunci & Mulai</button>
+        <button id="generate-teams-btn" disabled><i class="fas fa-balance-scale"></i> Acak Tim (Spotlight)</button>
+        <button id="generate-matches-btn" disabled><i class="fas fa-fist-raised"></i> Acak Pertandingan</button>
+        <button id="reset-btn"><i class="fas fa-sync-alt"></i> Reset Harian</button>
+    </div>
+
+    <div class="container">
+        <div class="teams panel">
+            <h2><i class="fas fa-shield-alt"></i> Hasil Pembagian Tim</h2>
+            <div id="team-container"></div>
+        </div>
+
+        <div id="matches-section" class="panel" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h2><i class="fas fa-trophy"></i> Jadwal Pertandingan</h2>
+                <button id="copy-results-btn" title="Salin Hasil Tim & Pertandingan"><i class="fas fa-copy"></i> Salin</button>
+            </div>
+            <div id="matches-container"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let pot1 = [], pot2 = [], pot3 = [], teams = {}, matches = [];
+
+            const elements = {
+                lockButton: document.getElementById('lock-pots-btn'),
+                generateTeamsButton: document.getElementById('generate-teams-btn'),
+                matchesButton: document.getElementById('generate-matches-btn'),
+                resetButton: document.getElementById('reset-btn'),
+                copyButton: document.getElementById('copy-results-btn'),
+                teamContainer: document.getElementById('team-container'),
+                matchesContainer: document.getElementById('matches-container'),
+                matchesSection: document.getElementById('matches-section'),
+                potInputs: [document.getElementById('pot1-input'), document.getElementById('pot2-input'), document.getElementById('pot3-input')]
+            };
+
+            const shuffleArray = (array) => array.slice().sort(() => Math.random() - 0.5);
+            const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+            function parseInput(textarea) {
+                return textarea.value.replace(/\n/g, ',').split(',').map(n => n.trim()).filter(Boolean);
+            }
+
+            function lockPotsAndSetup() {
+                pot1 = parseInput(elements.potInputs[0]);
+                pot2 = parseInput(elements.potInputs[1]);
+                pot3 = parseInput(elements.potInputs[2]);
+                if (pot1.length !== 6 || pot2.length !== 6 || pot3.length !== 6) {
+                    return alert('Validasi Gagal! Pastikan setiap Pot berisi tepat 6 nama.');
+                }
+                alert('Daftar pemain berhasil dikunci! Silakan acak tim.');
+                elements.potInputs.forEach(input => input.disabled = true);
+                elements.lockButton.disabled = true;
+                elements.generateTeamsButton.disabled = false;
+            }
+
+            async function generateFairTeamsWithAnimation() {
+                elements.generateTeamsButton.disabled = true;
+                elements.matchesButton.disabled = true;
+                elements.matchesSection.style.display = 'none';
+
+                const shuffledPots = [shuffleArray(pot1), shuffleArray(pot2), shuffleArray(pot3)];
+                teams = {};
+                let allTeamMembers = [];
+                for (let i = 0; i < 6; i++) {
+                    const teamName = `Tim ${i + 1}`;
+                    teams[teamName] = [
+                        { name: shuffledPots[0][i], pot: 1 },
+                        { name: shuffledPots[1][i], pot: 2 },
+                        { name: shuffledPots[2][i], pot: 3 }
+                    ];
+                    teams[teamName].forEach(member => allTeamMembers.push({ ...member, team: teamName }));
+                }
+
+                elements.teamContainer.innerHTML = '';
+                for (const teamName in teams) {
+                    const teamDiv = document.createElement('div');
+                    teamDiv.classList.add('team');
+                    teamDiv.innerHTML = `<h3><i class="fas fa-users-cog"></i> ${teamName}</h3><ul data-team="${teamName}"></ul>`;
+                    elements.teamContainer.appendChild(teamDiv);
+                }
+
+                for (const member of shuffleArray(allTeamMembers)) {
+                    const list = document.querySelector(`ul[data-team="${member.team}"]`);
+                    if (list) {
+                        const li = document.createElement('li');
+                        li.textContent = member.name;
+                        li.classList.add(`pot${member.pot}`);
+                        list.appendChild(li);
+                        await sleep(150);
+                    }
+                }
+                
+                elements.generateTeamsButton.disabled = false;
+                elements.matchesButton.disabled = false;
+            }
+
+            function generateMatches() {
+                const teamNames = Object.keys(teams);
+                const shuffledTeams = shuffleArray(teamNames);
+                matches = [];
+                elements.matchesContainer.innerHTML = '';
+                for (let i = 0; i < shuffledTeams.length; i += 2) {
+                    matches.push([shuffledTeams[i], shuffledTeams[i + 1]]);
+                    const matchDiv = document.createElement('div');
+                    matchDiv.innerHTML = `<span>${shuffledTeams[i]}</span> vs <span>${shuffledTeams[i+1]}</span>`;
+                    matchDiv.style.animationDelay = `${i * 0.05}s`;
+                    elements.matchesContainer.appendChild(matchDiv);
+                }
+                elements.matchesSection.style.display = 'block';
+            }
+
+            function copyResultsToClipboard() {
+                if (Object.keys(teams).length === 0 || matches.length === 0) return;
+                let resultText = "📋 HASIL UNDIAN TURNAMEN 📋\n\n--- TIM ---\n";
+                for (const teamName in teams) {
+                    resultText += `${teamName}: ${teams[teamName].map(m => m.name).join(', ')}\n`;
+                }
+                resultText += "\n--- JADWAL PERTANDINGAN ---\n";
+                matches.forEach((match, index) => {
+                    resultText += `Match ${index + 1}: ${match[0]} vs ${match[1]}\n`;
+                });
+
+                navigator.clipboard.writeText(resultText).then(() => {
+                    const originalText = elements.copyButton.innerHTML;
+                    elements.copyButton.innerHTML = `<i class="fas fa-check"></i> Tersalin!`;
+                    setTimeout(() => { elements.copyButton.innerHTML = originalText; }, 2000);
+                });
+            }
+
+            function resetAll() {
+                teams = {}; pot1 = []; pot2 = []; pot3 = []; matches = [];
+                elements.teamContainer.innerHTML = '';
+                elements.matchesSection.style.display = 'none';
+                elements.generateTeamsButton.disabled = true;
+                elements.matchesButton.disabled = true;
+                elements.lockButton.disabled = false;
+                elements.potInputs.forEach(input => { input.value = ''; input.disabled = false; });
+            }
+
+            elements.lockButton.addEventListener('click', lockPotsAndSetup);
+            elements.generateTeamsButton.addEventListener('click', generateFairTeamsWithAnimation);
+            elements.matchesButton.addEventListener('click', generateMatches);
+            elements.resetButton.addEventListener('click', resetAll);
+            elements.copyButton.addEventListener('click', copyResultsToClipboard);
+            
+            resetAll();
+        });
+    </script>
+</body>
+</html>
