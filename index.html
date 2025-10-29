@@ -84,19 +84,19 @@
     <h1><i class="fas fa-star"></i> Tournament Randomizer Pro</h1>
 
     <div id="setup-panel" class="panel">
-        <h2><i class="fas fa-edit"></i> 1. Isi Daftar Pemain Harian</h2>
+        <h2><i class="fas fa-edit"></i> 1. Isi Daftar Pemain Harian (12 Pemain)</h2>
         <div class="input-pots-grid">
             <div>
-                <label for="pot1-input">Pot 1 (Rank 1-6)</label>
-                <textarea id="pot1-input" placeholder="Masukkan 6 nama, pisahkan dengan koma atau baris baru"></textarea>
+                <label for="pot1-input">Pot 1 (Rank 1-4)</label>
+                <textarea id="pot1-input" placeholder="Masukkan 4 nama, pisahkan dengan koma atau baris baru"></textarea>
             </div>
             <div>
-                <label for="pot2-input">Pot 2 (Rank 7-12)</label>
-                <textarea id="pot2-input" placeholder="Masukkan 6 nama, pisahkan dengan koma atau baris baru"></textarea>
+                <label for="pot2-input">Pot 2 (Rank 5-8)</label>
+                <textarea id="pot2-input" placeholder="Masukkan 4 nama, pisahkan dengan koma atau baris baru"></textarea>
             </div>
             <div>
-                <label for="pot3-input">Pot 3 (Rank 13-18)</label>
-                <textarea id="pot3-input" placeholder="Masukkan 6 nama, pisahkan dengan koma atau baris baru"></textarea>
+                <label for="pot3-input">Pot 3 (Rank 9-12)</label>
+                <textarea id="pot3-input" placeholder="Masukkan 4 nama, pisahkan dengan koma atau baris baru"></textarea>
             </div>
         </div>
     </div>
@@ -150,9 +150,13 @@
                 pot1 = parseInput(elements.potInputs[0]);
                 pot2 = parseInput(elements.potInputs[1]);
                 pot3 = parseInput(elements.potInputs[2]);
-                if (pot1.length !== 6 || pot2.length !== 6 || pot3.length !== 6) {
-                    return alert('Validasi Gagal! Pastikan setiap Pot berisi tepat 6 nama.');
+                
+                // --- PERUBAHAN VALIDASI ---
+                if (pot1.length !== 4 || pot2.length !== 4 || pot3.length !== 4) {
+                    return alert('Validasi Gagal! Pastikan setiap Pot berisi tepat 4 nama.');
                 }
+                // --- AKHIR PERUBAHAN ---
+
                 alert('Daftar pemain berhasil dikunci! Silakan acak tim.');
                 elements.potInputs.forEach(input => input.disabled = true);
                 elements.lockButton.disabled = true;
@@ -167,7 +171,10 @@
                 const shuffledPots = [shuffleArray(pot1), shuffleArray(pot2), shuffleArray(pot3)];
                 teams = {};
                 let allTeamMembers = [];
-                for (let i = 0; i < 6; i++) {
+                
+                // --- PERUBAHAN LOOP (MEMBUAT 4 TIM) ---
+                for (let i = 0; i < 4; i++) {
+                // --- AKHIR PERUBAHAN ---
                     const teamName = `Tim ${i + 1}`;
                     teams[teamName] = [
                         { name: shuffledPots[0][i], pot: 1 },
@@ -205,6 +212,7 @@
                 const shuffledTeams = shuffleArray(teamNames);
                 matches = [];
                 elements.matchesContainer.innerHTML = '';
+                // Loop ini akan otomatis benar, membagi 4 tim menjadi 2 pertandingan
                 for (let i = 0; i < shuffledTeams.length; i += 2) {
                     matches.push([shuffledTeams[i], shuffledTeams[i + 1]]);
                     const matchDiv = document.createElement('div');
