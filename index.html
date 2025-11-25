@@ -1,283 +1,1103 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tournament Randomizer Pro</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+    <title>Game Keberuntungan Premium</title>
     <style>
-        :root {
-            --bg-color: #1a1a2e; --primary-color: #16213e; --secondary-color: #0f3460;
-            --accent-color: #e94560; --font-color: #ffffff; --card-bg: rgba(255, 255, 255, 0.08);
-        }
+        /* CSS - Tampilan Game */
         body {
-            font-family: 'Poppins', sans-serif; background: linear-gradient(45deg, #1a1a2e, #16213e, #0f3460);
-            color: var(--font-color); display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
         }
-        h1, h2 { text-align: center; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        h1 { font-size: 2.5rem; color: var(--font-color); margin-bottom: 10px; }
-        h2 { font-size: 1.5rem; color: #bdc3c7; border-bottom: 2px solid var(--accent-color); padding-bottom: 10px; margin-top: 0; }
-        .container { display: flex; flex-direction: column; gap: 30px; width: 100%; max-width: 1400px; align-items: center; }
-        .panel {
-            width: 100%; background: var(--card-bg); padding: 25px; border-radius: 15px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.18); box-sizing: border-box;
-        }
-        #team-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .team {
-            border: none; border-radius: 10px; padding: 15px; background: rgba(0,0,0,0.2);
-            transition: transform 0.3s ease; display: flex; flex-direction: column;
-        }
-        .team:hover { transform: translateY(-5px); }
-        .team h3 { margin-top: 0; color: var(--font-color); text-align: center; font-size: 1.2rem; }
-        .team ul { list-style: none; padding: 0; min-height: 120px; flex-grow: 1; }
-        .team li {
-            padding: 10px; margin-top: 8px; border-radius: 8px; text-align: center;
-            font-weight: 600; opacity: 0; transform: scale(0.8);
-            animation: popInPlayer 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        }
-        /* Mengganti .pot1, .pot2, .pot3 dengan satu class .player */
-        .player { background: linear-gradient(45deg, #57606f, #8395a7); }
 
-        @keyframes popInPlayer { to { opacity: 1; transform: scale(1); } }
-        .controls { margin: 25px 0; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
-        button {
-            padding: 12px 30px; font-size: 16px; font-family: 'Poppins', sans-serif; font-weight: 600;
-            cursor: pointer; border: none; border-radius: 50px; color: white;
-            transition: all 0.2s ease; display: flex; align-items: center; gap: 10px;
+        /* Animated Background */
+        .bg-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.3;
         }
-        button:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
-        button:active:not(:disabled) { transform: translateY(-1px) scale(0.98); box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
-        button:disabled { opacity: 0.5; cursor: not-allowed; }
-        #lock-players-btn { background-color: #27ae60; }
-        #generate-teams-btn { background-color: #5d52d5; }
-        #generate-matches-btn { background-color: #03a9f4; }
-        #reset-btn { background-color: #c0392b; }
-        #copy-results-btn { background-color: #f39c12; }
-        #matches-section { max-width: 700px; }
-        #matches-container div {
-            padding: 15px; background: linear-gradient(45deg, #5d52d5, #03a9f4);
-            border-radius: 10px; margin-top: 15px; font-size: 1.3rem; font-weight: 600;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3); opacity: 0; transform: scale(0.95);
-            animation: popIn 0.4s ease forwards;
+
+        .bg-animation span {
+            position: absolute;
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            animation: move 25s linear infinite;
+            bottom: -150px;
         }
-        #matches-container span { color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
-        @keyframes popIn { to { opacity: 1; transform: scale(1); } }
+
+        .bg-animation span:nth-child(1) {
+            left: 25%;
+            width: 80px;
+            height: 80px;
+            animation-delay: 0s;
+        }
+
+        .bg-animation span:nth-child(2) {
+            left: 10%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 2s;
+            animation-duration: 12s;
+        }
+
+        .bg-animation span:nth-child(3) {
+            left: 70%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 4s;
+        }
+
+        .bg-animation span:nth-child(4) {
+            left: 40%;
+            width: 60px;
+            height: 60px;
+            animation-delay: 0s;
+            animation-duration: 18s;
+        }
+
+        .bg-animation span:nth-child(5) {
+            left: 65%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 0s;
+        }
+
+        .bg-animation span:nth-child(6) {
+            left: 75%;
+            width: 110px;
+            height: 110px;
+            animation-delay: 3s;
+        }
+
+        .bg-animation span:nth-child(7) {
+            left: 35%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 7s;
+        }
+
+        .bg-animation span:nth-child(8) {
+            left: 50%;
+            width: 25px;
+            height: 25px;
+            animation-delay: 15s;
+            animation-duration: 45s;
+        }
+
+        .bg-animation span:nth-child(9) {
+            left: 20%;
+            width: 15px;
+            height: 15px;
+            animation-delay: 2s;
+            animation-duration: 35s;
+        }
+
+        .bg-animation span:nth-child(10) {
+            left: 85%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 0s;
+            animation-duration: 11s;
+        }
+
+        @keyframes move {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+                border-radius: 0;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+                border-radius: 50%;
+            }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Game Stats */
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Lives */
+        .lives {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .heart {
+            font-size: 24px;
+            margin: 0 5px;
+            color: #ff4757;
+            transition: all 0.3s;
+        }
+
+        .heart.lost {
+            opacity: 0.3;
+            transform: scale(0.8);
+        }
+
+        /* Timer */
+        .timer {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            height: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #ff9800, #ffeb3b);
+            width: 33.33%;
+            transition: width 0.5s;
+        }
+
+        h1 { 
+            margin-bottom: 10px; 
+            font-size: 28px; 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
         
-        /* Mengubah grid untuk 1 textarea */
-        .input-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        .input-grid label { font-weight: 600; font-size: 1.1rem; color: var(--accent-color); margin-bottom: 10px; display: block; }
-        .input-grid textarea {
-            width: 100%; height: 250px; background-color: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 8px; color: var(--font-color); font-family: 'Poppins', sans-serif;
-            padding: 10px; font-size: 1rem; resize: vertical; box-sizing: border-box;
+        h2 { 
+            color: #ffeb3b; 
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        p { 
+            font-size: 18px; 
+            margin-bottom: 20px;
+        }
+
+        .game-section { 
+            display: none; 
+            animation: fadeIn 0.5s;
+            position: relative;
+        }
+        
+        .game-section.active { 
+            display: block;
+        }
+
+        input[type="number"] {
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            width: 70%;
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            transition: all 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(255, 235, 59, 0.7);
+            transform: scale(1.05);
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            background-color: #ff9800;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        button:hover:before {
+            width: 300px;
+            height: 300px;
+        }
+
+        button:hover { 
+            background-color: #e68900;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* GAYA UNTUK TOMBOL YANG SEDANG DIMATIKAN/DISABLED */
+        button:disabled {
+            background-color: #ccc;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        button:disabled:before {
+            display: none;
+        }
+
+        button.choice-btn { 
+            width: 120px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-display {
+            font-size: 50px;
+            margin: 20px 0;
+            font-weight: bold;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .result-display.win {
+            animation: winAnimation 1s;
+        }
+
+        @keyframes winAnimation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .message {
+            margin-top: 15px;
+            font-weight: bold;
+            min-height: 25px;
+            font-size: 18px;
+        }
+        
+        .success { 
+            color: #4caf50;
+            animation: pulse 0.5s;
+        }
+        
+        .fail { 
+            color: #f44336;
+            animation: shake 0.5s;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Particle Effect */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            display: block;
+            pointer-events: none;
+        }
+
+        /* Difficulty Selection */
+        .difficulty-selection {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .difficulty-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .difficulty-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .difficulty-btn.selected {
+            border-color: #ffeb3b;
+            background: rgba(255, 235, 59, 0.3);
+        }
+
+        /* Start Screen */
+        #start-screen h2 {
+            font-size: 32px;
+            margin-bottom: 30px;
+        }
+
+        .high-score {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Game Over Screen */
+        #game-over-screen .result-display {
+            font-size: 60px;
+        }
+
+        /* Sound Toggle */
+        .sound-toggle {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .sound-toggle:hover {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Power-ups */
+        .power-up {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(255, 193, 7, 0.3);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px;
+            transition: all 0.3s;
+        }
+
+        .power-up:hover {
+            transform: scale(1.1);
+            background: rgba(255, 193, 7, 0.5);
+        }
+
+        .power-up.used {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
     </style>
 </head>
 <body>
 
-    <h1><i class="fas fa-star"></i> Tournament Randomizer Pro</h1>
+<div class="bg-animation">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
 
-    <div id="setup-panel" class="panel">
-        <h2><i class="fas fa-edit"></i> 1. Isi Daftar Pemain (12 Pemain)</h2>
-        <div class="input-grid"> <div>
-                <label for="player-list-input">Daftar Pemain</label>
-                <textarea id="player-list-input" placeholder="Masukkan 12 nama, pisahkan dengan koma atau baris baru"></textarea>
-            </div>
+<div class="container">
+    <div class="sound-toggle" id="sound-toggle">🔊</div>
+    
+    <div class="progress-bar">
+        <div class="progress" id="progress"></div>
+    </div>
+
+    <div class="game-stats">
+        <div class="stat-item">
+            <span class="stat-label">Skor</span>
+            <span class="stat-value" id="score">0</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Level</span>
+            <span class="stat-value" id="level">1/3</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Tingkat Kesulitan</span>
+            <span class="stat-value" id="difficulty-display">Mudah</span>
         </div>
     </div>
 
-    <div class="controls">
-        <button id="lock-players-btn"><i class="fas fa-lock"></i> Kunci & Mulai</button>
-        <button id="generate-teams-btn" disabled><i class="fas fa-balance-scale"></i> Acak Tim</button>
-        <button id="generate-matches-btn" disabled><i class="fas fa-fist-raised"></i> Acak Pertandingan</button>
-        <button id="reset-btn"><i class="fas fa-sync-alt"></i> Reset Harian</button>
+    <div class="lives" id="lives">
+        <span class="heart">❤️</span>
+        <span class="heart">❤️</span>
+        <span class="heart">❤️</span>
     </div>
 
-    <div class="container">
-        <div class="teams panel">
-            <h2><i class="fas fa-shield-alt"></i> Hasil Pembagian Tim</h2>
-            <div id="team-container"></div>
+    <div class="timer" id="timer">30</div>
+    
+    <div id="start-screen" class="game-section active">
+        <h1>Lucky Game Premium</h1>
+        <h2>Uji Keberuntungan Anda!</h2>
+        
+        <div class="high-score">
+            <p>Skor Tertinggi: <span id="high-score">0</span></p>
         </div>
-
-        <div id="matches-section" class="panel" style="display:none;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h2><i class="fas fa-trophy"></i> Jadwal Pertandingan</h2>
-                <button id="copy-results-btn" title="Salin Hasil Tim & Pertandingan"><i class="fas fa-copy"></i> Salin</button>
-            </div>
-            <div id="matches-container"></div>
+        
+        <div class="difficulty-selection">
+            <div class="difficulty-btn selected" data-difficulty="easy">Mudah</div>
+            <div class="difficulty-btn" data-difficulty="medium">Sedang</div>
+            <div class="difficulty-btn" data-difficulty="hard">Sulit</div>
         </div>
+        
+        <button onclick="startGame()">Mulai Permainan</button>
+    </div>
+    
+    <div id="level-1" class="game-section">
+        <h1>Lucky Game</h1>
+        <h2>Level 1: Tebak Dadu</h2>
+        <p>Pilih angka dadu (1 - 6)</p>
+        <div class="result-display" id="dice-result">🎲</div>
+        
+        <div id="btn-container-1">
+            <button onclick="playLevel1(1)">1</button>
+            <button onclick="playLevel1(2)">2</button>
+            <button onclick="playLevel1(3)">3</button>
+            <button onclick="playLevel1(4)">4</button>
+            <button onclick="playLevel1(5)">5</button>
+            <button onclick="playLevel1(6)">6</button>
+        </div>
+        <div id="msg-1" class="message"></div>
+        
+        <div class="power-up" id="power-up-1" title="Petunjuk">💡</div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Menghapus pot1, pot2, pot3 dan mengganti dengan playerList
-            let playerList = [], teams = {}, matches = [];
+    <div id="level-2" class="game-section">
+        <h1>Lucky Game</h1>
+        <h2>Level 2: Tebak Spin</h2>
+        <p>Masukkan 3 angka (000 - 999)</p>
+        <p style="font-size: 14px; color: #ddd;">(Urutan angka boleh acak)</p>
+        <div class="result-display" id="spin-result">🎰 000</div>
+        
+        <input type="number" id="spin-input" min="0" max="999" placeholder="Cth: 123">
+        <br>
+        <button id="btn-spin" onclick="playLevel2()">Putar Spin!</button>
+        <div id="msg-2" class="message"></div>
+        
+        <div class="power-up" id="power-up-2" title="Petunjuk">💡</div>
+    </div>
 
-            const elements = {
-                lockButton: document.getElementById('lock-players-btn'), // Ganti ID
-                generateTeamsButton: document.getElementById('generate-teams-btn'),
-                matchesButton: document.getElementById('generate-matches-btn'),
-                resetButton: document.getElementById('reset-btn'),
-                copyButton: document.getElementById('copy-results-btn'),
-                teamContainer: document.getElementById('team-container'),
-                matchesContainer: document.getElementById('matches-container'),
-                matchesSection: document.getElementById('matches-section'),
-                playerListInput: document.getElementById('player-list-input') // Ganti ID
-            };
+    <div id="level-3" class="game-section">
+        <h1>Lucky Game</h1>
+        <h2>Level 3: Tebak Koin</h2>
+        <p>Pilih Angka atau Gambar</p>
+        <div class="result-display" id="coin-result">🪙</div>
+        
+        <div id="btn-container-3">
+            <button class="choice-btn" onclick="playLevel3('angka')">Angka</button>
+            <button class="choice-btn" onclick="playLevel3('gambar')">Gambar</button>
+        </div>
+        <div id="msg-3" class="message"></div>
+        
+        <div class="power-up" id="power-up-3" title="Petunjuk">💡</div>
+    </div>
 
-            // Daftar pemain default
-            const defaultPlayers = [
-                "Pedro", "Riven", "Hican", "Zero", "Ean", "Cisen",
-                "Piara", "Zicho", "Riski", "Depin", "Renbo", "Febri"
-            ].join('\n');
+    <div id="win-screen" class="game-section">
+        <h2>🎉 SELAMAT! 🎉</h2>
+        <div class="result-display win">🏆</div>
+        <p>Kamu berhasil menyelesaikan semua level!</p>
+        <p>Skor Akhir: <span id="final-score">0</span></p>
+        <button onclick="location.reload()">Main Lagi</button>
+    </div>
 
-            const shuffleArray = (array) => array.slice().sort(() => Math.random() - 0.5);
-            const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    <div id="game-over-screen" class="game-section">
+        <h2>GAME OVER</h2>
+        <div class="result-display">😢</div>
+        <p>Skor Akhir: <span id="game-over-score">0</span></p>
+        <button onclick="location.reload()">Coba Lagi</button>
+    </div>
 
-            function parseInput(textarea) {
-                return textarea.value.replace(/\n/g, ',').split(',').map(n => n.trim()).filter(Boolean);
-            }
+</div>
 
-            // --- FUNGSI DIREVISI: lockPlayerList ---
-            function lockPlayerList() {
-                playerList = parseInput(elements.playerListInput);
-                
-                // Validasi baru: harus tepat 12 pemain
-                if (playerList.length !== 12) {
-                    return alert(`Validasi Gagal! Dibutuhkan tepat 12 pemain. Anda memasukkan ${playerList.length}.`);
-                }
+<script>
+    // Game Variables
+    let score = 0;
+    let lives = 3;
+    let currentLevel = 1;
+    let timer = 30;
+    let timerInterval;
+    let difficulty = 'easy';
+    let soundEnabled = true;
+    let powerUpUsed = {
+        level1: false,
+        level2: false,
+        level3: false
+    };
+    let highScore = localStorage.getItem('luckyGameHighScore') || 0;
 
-                alert('Daftar 12 pemain berhasil dikunci! Silakan acak tim.');
-                elements.playerListInput.disabled = true;
-                elements.lockButton.disabled = true;
-                elements.generateTeamsButton.disabled = false;
-            }
+    // Initialize high score display
+    document.getElementById('high-score').textContent = highScore;
 
-            // --- FUNGSI DIREVISI: generateRandomTeamsWithAnimation ---
-            async function generateRandomTeamsWithAnimation() {
-                elements.generateTeamsButton.disabled = true;
-                elements.matchesButton.disabled = true;
-                elements.matchesSection.style.display = 'none';
-
-                const shuffledPlayers = shuffleArray(playerList);
-                teams = {};
-                let allTeamMembers = [];
-                
-                // Loop untuk membuat 4 tim
-                for (let i = 0; i < 4; i++) {
-                    const teamName = `Tim ${i + 1}`;
-                    
-                    // Ambil 3 pemain dari daftar acak
-                    const teamMembers = [
-                        shuffledPlayers.pop(),
-                        shuffledPlayers.pop(),
-                        shuffledPlayers.pop()
-                    ];
-
-                    // Simpan data tim
-                    teams[teamName] = [];
-                    teamMembers.forEach(name => {
-                        const memberData = { name: name, team: teamName };
-                        teams[teamName].push(memberData);
-                        allTeamMembers.push(memberData);
-                    });
-                }
-
-                elements.teamContainer.innerHTML = '';
-                for (const teamName in teams) {
-                    const teamDiv = document.createElement('div');
-                    teamDiv.classList.add('team');
-                    teamDiv.innerHTML = `<h3><i class="fas fa-users-cog"></i> ${teamName}</h3><ul data-team="${teamName}"></ul>`;
-                    elements.teamContainer.appendChild(teamDiv);
-                }
-
-                // Animasi memasukkan pemain ke tim
-                for (const member of shuffleArray(allTeamMembers)) {
-                    const list = document.querySelector(`ul[data-team="${member.team}"]`);
-                    if (list) {
-                        const li = document.createElement('li');
-                        li.textContent = member.name;
-                        li.classList.add('player'); // Ganti class pot menjadi .player
-                        list.appendChild(li);
-                        await sleep(150);
-                    }
-                }
-                
-                elements.generateTeamsButton.disabled = false;
-                elements.matchesButton.disabled = false;
-            }
-
-            // --- FUNGSI generateMatches (TIDAK PERLU DIUBAH) ---
-            // Fungsi ini sudah benar, akan mengambil 4 nama tim dan mengacaknya
-            function generateMatches() {
-                const teamNames = Object.keys(teams);
-                const shuffledTeams = shuffleArray(teamNames);
-                matches = [];
-                elements.matchesContainer.innerHTML = '';
-                
-                for (let i = 0; i < shuffledTeams.length; i += 2) {
-                    matches.push([shuffledTeams[i], shuffledTeams[i + 1]]);
-                    const matchDiv = document.createElement('div');
-                    matchDiv.innerHTML = `<span>${shuffledTeams[i]}</span> vs <span>${shuffledTeams[i+1]}</span>`;
-                    matchDiv.style.animationDelay = `${i * 0.05}s`;
-                    elements.matchesContainer.appendChild(matchDiv);
-                }
-                elements.matchesSection.style.display = 'block';
-            }
-
-            // --- FUNGSI copyResultsToClipboard (TIDAK PERLU DIUBAH) ---
-            function copyResultsToClipboard() {
-                if (Object.keys(teams).length === 0 || matches.length === 0) return;
-                let resultText = "📋 HASIL UNDIAN TURNAMEN 📋\n\n--- TIM ---\n";
-                for (const teamName in teams) {
-                    resultText += `${teamName}: ${teams[teamName].map(m => m.name).join(', ')}\n`;
-                }
-                resultText += "\n--- JADWAL PERTANDINGAN ---\n";
-                matches.forEach((match, index) => {
-                    resultText += `Match ${index + 1}: ${match[0]} vs ${match[1]}\n`;
-                });
-
-                navigator.clipboard.writeText(resultText).then(() => {
-                    const originalText = elements.copyButton.innerHTML;
-                    elements.copyButton.innerHTML = `<i class="fas fa-check"></i> Tersalin!`;
-                    setTimeout(() => { elements.copyButton.innerHTML = originalText; }, 2000);
-                });
-            }
-
-            // --- FUNGSI DIREVISI: resetAll ---
-            function resetAll() {
-                teams = {}; playerList = []; matches = [];
-                elements.teamContainer.innerHTML = '';
-                elements.matchesSection.style.display = 'none';
-                elements.generateTeamsButton.disabled = true;
-                elements.matchesButton.disabled = true;
-                elements.lockButton.disabled = false;
-                
-                // Isi textarea dengan daftar default
-                elements.playerListInput.value = defaultPlayers;
-                elements.playerListInput.disabled = false;
-            }
-
-            // Update event listener
-            elements.lockButton.addEventListener('click', lockPlayerList);
-            elements.generateTeamsButton.addEventListener('click', generateRandomTeamsWithAnimation);
-            elements.matchesButton.addEventListener('click', generateMatches);
-            elements.resetButton.addEventListener('click', resetAll);
-            elements.copyButton.addEventListener('click', copyResultsToClipboard);
+    // Difficulty selection
+    document.querySelectorAll('.difficulty-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('selected'));
+            this.classList.add('selected');
+            difficulty = this.dataset.difficulty;
             
-            // Panggil resetAll saat pertama kali dimuat
-            resetAll();
+            // Update difficulty display
+            const difficultyText = {
+                'easy': 'Mudah',
+                'medium': 'Sedang',
+                'hard': 'Sulit'
+            };
+            document.getElementById('difficulty-display').textContent = difficultyText[difficulty];
         });
-    </script>
+    });
+
+    // Sound toggle
+    document.getElementById('sound-toggle').addEventListener('click', function() {
+        soundEnabled = !soundEnabled;
+        this.textContent = soundEnabled ? '🔊' : '🔇';
+    });
+
+    // Power-ups
+    document.getElementById('power-up-1').addEventListener('click', function() {
+        if (!powerUpUsed.level1) {
+            usePowerUp(1);
+            this.classList.add('used');
+            powerUpUsed.level1 = true;
+        }
+    });
+
+    document.getElementById('power-up-2').addEventListener('click', function() {
+        if (!powerUpUsed.level2) {
+            usePowerUp(2);
+            this.classList.add('used');
+            powerUpUsed.level2 = true;
+        }
+    });
+
+    document.getElementById('power-up-3').addEventListener('click', function() {
+        if (!powerUpUsed.level3) {
+            usePowerUp(3);
+            this.classList.add('used');
+            powerUpUsed.level3 = true;
+        }
+    });
+
+    function usePowerUp(level) {
+        playSound('powerup');
+        
+        if (level === 1) {
+            // Give a hint for dice
+            const hint = Math.floor(Math.random() * 6) + 1;
+            document.getElementById('msg-1').textContent = `Petunjuk: Coba angka ${hint}`;
+            document.getElementById('msg-1').className = "message";
+        } else if (level === 2) {
+            // Give a hint for spin
+            const hint = Math.floor(Math.random() * 1000);
+            const formattedHint = pad(hint);
+            document.getElementById('msg-2').textContent = `Petunjuk: Coba angka ${formattedHint}`;
+            document.getElementById('msg-2').className = "message";
+        } else if (level === 3) {
+            // Give a hint for coin
+            const hint = Math.random() < 0.5 ? 'angka' : 'gambar';
+            document.getElementById('msg-3').textContent = `Petunjuk: Coba ${hint}`;
+            document.getElementById('msg-3').className = "message";
+        }
+    }
+
+    function startGame() {
+        // Reset game state
+        score = 0;
+        lives = 3;
+        currentLevel = 1;
+        timer = difficulty === 'easy' ? 30 : difficulty === 'medium' ? 20 : 15;
+        
+        // Update UI
+        updateScore();
+        updateLives();
+        updateLevel();
+        
+        // Start timer
+        startTimer();
+        
+        // Switch to first level
+        switchLevel('level-1');
+    }
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            timer--;
+            document.getElementById('timer').textContent = timer;
+            
+            if (timer <= 0) {
+                clearInterval(timerInterval);
+                loseLife();
+            }
+        }, 1000);
+    }
+
+    function updateScore() {
+        document.getElementById('score').textContent = score;
+    }
+
+    function updateLives() {
+        const hearts = document.querySelectorAll('.heart');
+        hearts.forEach((heart, index) => {
+            if (index >= lives) {
+                heart.classList.add('lost');
+            } else {
+                heart.classList.remove('lost');
+            }
+        });
+    }
+
+    function updateLevel() {
+        document.getElementById('level').textContent = `${currentLevel}/3`;
+        
+        // Update progress bar
+        const progress = document.getElementById('progress');
+        progress.style.width = `${(currentLevel / 3) * 100}%`;
+    }
+
+    function loseLife() {
+        lives--;
+        updateLives();
+        
+        if (lives <= 0) {
+            gameOver();
+        } else {
+            // Reset timer for the next attempt
+            timer = difficulty === 'easy' ? 30 : difficulty === 'medium' ? 20 : 15;
+            document.getElementById('timer').textContent = timer;
+            startTimer();
+            
+            // Show message
+            const msgId = `msg-${currentLevel}`;
+            document.getElementById(msgId).textContent = `Nyawa tersisa: ${lives}`;
+            document.getElementById(msgId).className = "message fail";
+        }
+    }
+
+    function gameOver() {
+        clearInterval(timerInterval);
+        
+        // Update high score if needed
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem('luckyGameHighScore', highScore);
+        }
+        
+        document.getElementById('game-over-score').textContent = score;
+        switchLevel('game-over-screen');
+    }
+
+    function addScore(points) {
+        score += points;
+        updateScore();
+        
+        // Add bonus points for remaining time
+        const timeBonus = timer * 10;
+        score += timeBonus;
+        updateScore();
+        
+        // Show score animation
+        const scoreElement = document.getElementById('score');
+        scoreElement.style.transform = 'scale(1.5)';
+        setTimeout(() => {
+            scoreElement.style.transform = 'scale(1)';
+        }, 300);
+    }
+
+    function playSound(type) {
+        if (!soundEnabled) return;
+        
+        // Create audio context for simple sounds
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        switch(type) {
+            case 'win':
+                oscillator.frequency.value = 523.25; // C5
+                gainNode.gain.value = 0.3;
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.2);
+                
+                setTimeout(() => {
+                    const osc2 = audioContext.createOscillator();
+                    osc2.connect(gainNode);
+                    osc2.frequency.value = 659.25; // E5
+                    osc2.start();
+                    osc2.stop(audioContext.currentTime + 0.2);
+                }, 200);
+                
+                setTimeout(() => {
+                    const osc3 = audioContext.createOscillator();
+                    osc3.connect(gainNode);
+                    osc3.frequency.value = 783.99; // G5
+                    osc3.start();
+                    osc3.stop(audioContext.currentTime + 0.4);
+                }, 400);
+                break;
+                
+            case 'lose':
+                oscillator.frequency.value = 200;
+                gainNode.gain.value = 0.3;
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.5);
+                break;
+                
+            case 'powerup':
+                oscillator.frequency.value = 400;
+                gainNode.gain.value = 0.2;
+                oscillator.start();
+                
+                oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.2);
+                oscillator.stop(audioContext.currentTime + 0.2);
+                break;
+        }
+    }
+
+    function createParticles(x, y, color) {
+        const container = document.querySelector('.container');
+        const particlesContainer = document.createElement('div');
+        particlesContainer.className = 'particles';
+        container.appendChild(particlesContainer);
+        
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('span');
+            particle.className = 'particle';
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            particle.style.width = Math.random() * 10 + 5 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.backgroundColor = color;
+            particle.style.borderRadius = '50%';
+            
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = Math.random() * 5 + 2;
+            const lifetime = Math.random() * 1000 + 500;
+            
+            particlesContainer.appendChild(particle);
+            
+            let opacity = 1;
+            let currentX = x;
+            let currentY = y;
+            
+            const animateParticle = () => {
+                currentX += Math.cos(angle) * velocity;
+                currentY += Math.sin(angle) * velocity;
+                opacity -= 0.02;
+                
+                particle.style.left = currentX + 'px';
+                particle.style.top = currentY + 'px';
+                particle.style.opacity = opacity;
+                
+                if (opacity > 0) {
+                    requestAnimationFrame(animateParticle);
+                } else {
+                    particle.remove();
+                }
+            };
+            
+            requestAnimationFrame(animateParticle);
+        }
+        
+        setTimeout(() => {
+            particlesContainer.remove();
+        }, 2000);
+    }
+
+    // Helper: Toggle status tombol (aktif/mati)
+    function toggleButtons(containerId, isDisabled) {
+        // Jika containerId adalah ID tombol langsung (bukan container)
+        const element = document.getElementById(containerId);
+        if (element && element.tagName === 'BUTTON') {
+            element.disabled = isDisabled;
+            return;
+        }
+
+        // Jika containerId adalah div pembungkus tombol
+        if (element) {
+            const buttons = element.querySelectorAll('button');
+            buttons.forEach(btn => btn.disabled = isDisabled);
+        }
+    }
+
+    function pad(num) {
+        return num.toString().padStart(3, '0');
+    }
+
+    function switchLevel(levelId) {
+        const sections = document.querySelectorAll('.game-section');
+        sections.forEach(sec => sec.classList.remove('active'));
+        document.getElementById(levelId).classList.add('active');
+        
+        // Update current level
+        if (levelId === 'level-1') currentLevel = 1;
+        else if (levelId === 'level-2') currentLevel = 2;
+        else if (levelId === 'level-3') currentLevel = 3;
+        
+        updateLevel();
+    }
+
+    // --- LOGIC LEVEL 1 ---
+    function playLevel1(userGuess) {
+        // MATIKAN SEMUA TOMBOL DI LEVEL 1
+        toggleButtons('btn-container-1', true);
+        
+        const display = document.getElementById('dice-result');
+        const msg = document.getElementById('msg-1');
+        
+        display.innerText = "🎲 ...";
+        msg.innerText = "";
+        
+        setTimeout(() => {
+            const diceRoll = Math.floor(Math.random() * 6) + 1;
+            display.innerText = "🎲 " + diceRoll;
+
+            if (userGuess === diceRoll) {
+                msg.className = "message success";
+                msg.innerText = "Benar! Lanjut...";
+                playSound('win');
+                addScore(100);
+                
+                // Create particle effect
+                const rect = display.getBoundingClientRect();
+                const containerRect = document.querySelector('.container').getBoundingClientRect();
+                createParticles(
+                    rect.left - containerRect.left + rect.width / 2,
+                    rect.top - containerRect.top + rect.height / 2,
+                    '#4caf50'
+                );
+                
+                setTimeout(() => { switchLevel('level-2'); }, 1500);
+            } else {
+                msg.className = "message fail";
+                msg.innerText = "Salah! Coba lagi.";
+                playSound('lose');
+                loseLife();
+                // HIDUPKAN TOMBOL KEMBALI JIKA SALAH
+                toggleButtons('btn-container-1', false);
+            }
+        }, 1000); // Waktu tunggu 1 detik
+    }
+
+    // --- LOGIC LEVEL 2 ---
+    function playLevel2() {
+        const inputVal = document.getElementById('spin-input').value;
+        const display = document.getElementById('spin-result');
+        const msg = document.getElementById('msg-2');
+
+        if (inputVal === "" || inputVal < 0 || inputVal > 999) {
+            alert("Masukkan angka yang valid!");
+            return;
+        }
+
+        // MATIKAN TOMBOL SPIN
+        toggleButtons('btn-spin', true);
+
+        display.innerText = "🎰 ...";
+        msg.innerText = "";
+
+        setTimeout(() => {
+            const spinResult = Math.floor(Math.random() * 1000);
+            const formattedResult = pad(spinResult);
+            const formattedInput = pad(parseInt(inputVal));
+            
+            display.innerText = "🎰 " + formattedResult;
+
+            // Logic Acak Posisi (Anagram)
+            const sortedInput = formattedInput.split('').sort().join('');
+            const sortedResult = formattedResult.split('').sort().join('');
+
+            if (sortedInput === sortedResult) {
+                msg.className = "message success";
+                msg.innerText = "Cocok! Lanjut...";
+                playSound('win');
+                addScore(200);
+                
+                // Create particle effect
+                const rect = display.getBoundingClientRect();
+                const containerRect = document.querySelector('.container').getBoundingClientRect();
+                createParticles(
+                    rect.left - containerRect.left + rect.width / 2,
+                    rect.top - containerRect.top + rect.height / 2,
+                    '#4caf50'
+                );
+                
+                setTimeout(() => { switchLevel('level-3'); }, 2000);
+            } else {
+                msg.className = "message fail";
+                msg.innerText = "Tidak cocok! Coba lagi.";
+                playSound('lose');
+                loseLife();
+                // HIDUPKAN TOMBOL KEMBALI JIKA SALAH
+                toggleButtons('btn-spin', false);
+            }
+            
+            console.log(`Input: ${formattedInput}, Result: ${formattedResult}`);
+        }, 1500); // Waktu tunggu 1.5 detik
+    }
+
+    // --- LOGIC LEVEL 3 ---
+    function playLevel3(userChoice) {
+        // MATIKAN KEDUA TOMBOL LEVEL 3
+        toggleButtons('btn-container-3', true);
+
+        const display = document.getElementById('coin-result');
+        const msg = document.getElementById('msg-3');
+
+        display.innerText = "🪙 ...";
+        msg.innerText = "";
+
+        setTimeout(() => {
+            const isAngka = Math.random() < 0.5;
+            const resultText = isAngka ? 'angka' : 'gambar';
+            
+            display.innerText = isAngka ? "🪙 ANGKA" : "🦅 GAMBAR";
+
+            if (userChoice === resultText) {
+                msg.className = "message success";
+                msg.innerText = "MENANG!";
+                playSound('win');
+                addScore(300);
+                
+                // Create particle effect
+                const rect = display.getBoundingClientRect();
+                const containerRect = document.querySelector('.container').getBoundingClientRect();
+                createParticles(
+                    rect.left - containerRect.left + rect.width / 2,
+                    rect.top - containerRect.top + rect.height / 2,
+                    '#4caf50'
+                );
+                
+                setTimeout(() => { 
+                    // Update high score if needed
+                    if (score > highScore) {
+                        highScore = score;
+                        localStorage.setItem('luckyGameHighScore', highScore);
+                    }
+                    
+                    document.getElementById('final-score').textContent = score;
+                    switchLevel('win-screen'); 
+                }, 1500);
+            } else {
+                msg.className = "message fail";
+                msg.innerText = "Salah! Coba lagi.";
+                playSound('lose');
+                loseLife();
+                // HIDUPKAN TOMBOL KEMBALI JIKA SALAH
+                toggleButtons('btn-container-3', false);
+            }
+        }, 1000); // Waktu tunggu 1 detik
+    }
+</script>
+
 </body>
 </html>
-    
